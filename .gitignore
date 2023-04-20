@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+
+
+# add myself noneed uoload to github
+build/
+images/
+include/mmdeploy
+inference_exe/
+onnx/
+test/
+thirdparty/
