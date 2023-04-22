@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.20)
 set(CMAKE_CXX_STANDARD 17)
 
 # 包含需要编译得到的头文件
-SET(LIBOD_SRC ./src/object_detection_official.cpp)
+SET(LIBOD_SRC ./src/object_detection_my.cpp)
 ADD_LIBRARY(objectdetection SHARED ${LIBOD_SRC})
 
 set(OpenCV_DIR "D:/opencv_3_4_6_build_from_exe/opencv/build")
