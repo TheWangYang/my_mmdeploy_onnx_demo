@@ -4,16 +4,17 @@ cmake_minimum_required(VERSION 3.20)
 set(CMAKE_CXX_STANDARD 17)
 
 # 包含需要编译得到的头文件
-SET(LIBOD_SRC ./src/object_detection_my.cpp)
-ADD_LIBRARY(objectdetection SHARED ${LIBOD_SRC})
+SET(LIBOD_SRC ./src/object_detection_batch_inference.cpp)
+ADD_LIBRARY(onnx_inference SHARED ${LIBOD_SRC})
 
-set(OpenCV_DIR "D:/opencv_3_4_6_build_from_exe/opencv/build")
+set(OpenCV_DIR "F:/cpp_tools/tools/opencv_3_4_6_build/opencv/build")
 find_package(OpenCV REQUIRED)
 if(OpenCV_FOUND)
-    target_include_directories(objectdetection PUBLIC ${OpenCV_INCLUDE_DIRS})
-    target_link_libraries(objectdetection PRIVATE ${OpenCV_LIBS})
+    target_include_directories(onnx_inference PUBLIC ${OpenCV_INCLUDE_DIRS})
+    target_link_libraries(onnx_inference PRIVATE ${OpenCV_LIBS})
 endif()
 
+set(CMAKE_PREFIX_PATH "E:/PyCharmWorkPlace/my_mmdeploy_onnx_demo/lib/cmake/MMDeploy")
 
 # 添加mmdeploy编译需要的文件
 if (NOT (${CMAKE_PROJECT_NAME} STREQUAL "MMDeploy"))
@@ -21,13 +22,13 @@ if (NOT (${CMAKE_PROJECT_NAME} STREQUAL "MMDeploy"))
 endif ()
 
 if (MMDEPLOY_BUILD_SDK_MONOLITHIC)
-    target_link_libraries(objectdetection PRIVATE mmdeploy)
+    target_link_libraries(onnx_inference PRIVATE mmdeploy)
 else ()
     # Load MMDeploy modules
-    mmdeploy_load_static(objectdetection MMDeployStaticModules)
-    mmdeploy_load_dynamic(objectdetection MMDeployDynamicModules)
+    mmdeploy_load_static(onnx_inference MMDeployStaticModules)
+    mmdeploy_load_dynamic(onnx_inference MMDeployDynamicModules)
     # Link to MMDeploy libraries
-    target_link_libraries(objectdetection PRIVATE MMDeployLibs)
+    target_link_libraries(onnx_inference PRIVATE MMDeployLibs)
 endif ()
 
 

@@ -39,4 +39,7 @@ include/mmdeploy
 inference_exe/
 onnx/
 test/
+results/
 thirdparty/
+test_cpp/build/
+

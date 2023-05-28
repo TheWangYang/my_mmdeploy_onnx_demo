@@ -1,25 +1,66 @@
 #include <fstream>
+#include <string>
+#include <iostream>
+#include <vector>
+#include <windows.h>
 #include <opencv2/imgcodecs/imgcodecs.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-#include <string>
 #include <mmdeploy/detector.h>
 
 extern "C"{
-__declspec(dllexport) int do_inference(const char *device_name, const char *model_path, const char *image_path);
+  __declspec(dllexport) int batch_inference(const char* device_name, const char* model_path, const char* image_dir, const char* result_dir);
+  __declspec(dllexport) int do_inference(const char *device_name, const char *model_path, const char *image_path, const char *result_path);
 }
 
-int do_inference(const char *device_name, const char *model_path, const char *image_path) {
-  cv::Mat img = cv::imread(image_path);
-  if (!img.data) {
-    fprintf(stderr, "failed to load image: %s\n", image_path);
-    return 1;
-  }
+//批处理函数
+int batch_inference(const char* device_name, const char* model_path, const char* image_dir, const char* result_dir) {
+    std::string search_path = std::string(image_dir) + "\\*";
+    WIN32_FIND_DATAA file_data;
+    HANDLE hFind;
 
+    hFind = FindFirstFileA(search_path.c_str(), &file_data);
+    if (hFind == INVALID_HANDLE_VALUE) {
+        fprintf(stderr, "Failed to open directory: %s\n", image_dir);
+        return 1;
+    }
+
+    do {
+        if (file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+            // 跳过目录
+            continue;
+        }
+
+        std::string filename(file_data.cFileName);
+        std::string image_path = std::string(image_dir) + "\\" + filename;
+        std::string result_path = std::string(result_dir) + "\\" + filename;
+
+        //对于每张图片调用do_inference实现推理和结果保存
+        do_inference(device_name, model_path, image_path.c_str(), result_path.c_str());
+
+    } while (FindNextFileA(hFind, &file_data) != 0);
+
+    FindClose(hFind);
+    
+    return 0;
+}
+
+
+//单张图片推理函数
+int do_inference(const char *device_name, const char *model_path, const char *image_path, const char *result_path) {
+
+  //初始化mmdeploy_detector对象
   mmdeploy_detector_t detector{};
   int status{};
   status = mmdeploy_detector_create_by_path(model_path, device_name, 0, &detector);
   if (status != MMDEPLOY_SUCCESS) {
     fprintf(stderr, "failed to create detector, code: %d\n", (int)status);
+    return 1;
+  }
+
+  //单张图片处理操作
+  cv::Mat img = cv::imread(image_path);
+  if (!img.data) {
+    fprintf(stderr, "failed to load image: %s\n", image_path);
     return 1;
   }
 
@@ -74,7 +115,8 @@ int do_inference(const char *device_name, const char *model_path, const char *im
                   cv::Point{(int)box.right, (int)box.bottom}, cv::Scalar{0, 255, 0});
   }
 
-  cv::imwrite("output_detection.png", img);
+  //保存图像到result_path中
+  cv::imwrite(result_path, img);
 
   mmdeploy_detector_release_result(bboxes, res_count, 1);
 
