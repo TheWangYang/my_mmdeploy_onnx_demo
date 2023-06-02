@@ -23,6 +23,7 @@ int batch_inference(const char* device_name, const char* model_path, const char*
         fprintf(stderr, "Failed to open directory: %s\n", image_dir);
         return 1;
     }
+    
 
     do {
         if (file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
@@ -111,8 +112,23 @@ int do_inference(const char *device_name, const char *model_path, const char *im
       merge(ch, 3, img);
     }
 
+    std::string label;
+    if (bboxes[i].label_id == 0)
+        label = "rust";
+    else if (bboxes[i].label_id == 1)
+        label = "scratch";
+    else if (bboxes[i].label_id == 2)
+        label = "spot";
+    else
+        label = "unknown";
+
     cv::rectangle(img, cv::Point{(int)box.left, (int)box.top},
                   cv::Point{(int)box.right, (int)box.bottom}, cv::Scalar{0, 255, 0});
+
+    // 绘制类别名称和置信度分数
+    std::string text = label + ": " + std::to_string(bboxes[i].score);
+    cv::putText(img, text, cv::Point{(int)box.left, (int)box.top - 5}, cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar{0, 0, 255}, 2);
+    
   }
 
   //保存图像到result_path中
