@@ -7,14 +7,14 @@ set(CMAKE_CXX_STANDARD 17)
 SET(LIBOD_SRC ./src/object_detection_batch_inference.cpp)
 ADD_LIBRARY(onnx_inference SHARED ${LIBOD_SRC})
 
-set(OpenCV_DIR "F:/cpp_tools/tools/opencv_3_4_6_build/opencv/build")
+set(OpenCV_DIR "D:\\opencv_3_4_6_build_from_exe\\opencv\\build")
 find_package(OpenCV REQUIRED)
 if(OpenCV_FOUND)
     target_include_directories(onnx_inference PUBLIC ${OpenCV_INCLUDE_DIRS})
     target_link_libraries(onnx_inference PRIVATE ${OpenCV_LIBS})
 endif()
 
-set(CMAKE_PREFIX_PATH "E:/PyCharmWorkPlace/my_mmdeploy_onnx_demo/lib/cmake/MMDeploy")
+set(CMAKE_PREFIX_PATH "D:\\cpp_work_place\\my_mmdeploy_onnx_demo\\lib\\cmake\\MMDeploy")
 
 # 添加mmdeploy编译需要的文件
 if (NOT (${CMAKE_PROJECT_NAME} STREQUAL "MMDeploy"))

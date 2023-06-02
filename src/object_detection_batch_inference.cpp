@@ -23,10 +23,7 @@ int batch_inference(const char* device_name, const char* model_path, const char*
         fprintf(stderr, "Failed to open directory: %s\n", image_dir);
         return 1;
     }
-<<<<<<< HEAD
     
-=======
->>>>>>> ef9016b3dcf9aa164fd1cf7af351663cc77d8e39
 
     do {
         if (file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
@@ -115,7 +112,6 @@ int do_inference(const char *device_name, const char *model_path, const char *im
       merge(ch, 3, img);
     }
 
-<<<<<<< HEAD
     std::string label;
     if (bboxes[i].label_id == 0)
         label = "rust";
@@ -133,10 +129,6 @@ int do_inference(const char *device_name, const char *model_path, const char *im
     std::string text = label + ": " + std::to_string(bboxes[i].score);
     cv::putText(img, text, cv::Point{(int)box.left, (int)box.top - 5}, cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar{0, 0, 255}, 2);
     
-=======
-    cv::rectangle(img, cv::Point{(int)box.left, (int)box.top},
-                  cv::Point{(int)box.right, (int)box.bottom}, cv::Scalar{0, 255, 0});
->>>>>>> ef9016b3dcf9aa164fd1cf7af351663cc77d8e39
   }
 
   //保存图像到result_path中
