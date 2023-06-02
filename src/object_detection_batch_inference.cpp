@@ -124,7 +124,7 @@ int do_inference(const char *device_name, const char *model_path, const char *im
 
     cv::rectangle(img, cv::Point{(int)box.left, (int)box.top},
                   cv::Point{(int)box.right, (int)box.bottom}, cv::Scalar{0, 255, 0});
-
+      
     // 绘制类别名称和置信度分数
     std::string text = label + ": " + std::to_string(bboxes[i].score);
     cv::putText(img, text, cv::Point{(int)box.left, (int)box.top - 5}, cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar{0, 0, 255}, 2);
