@@ -40,3 +40,4 @@ inference_exe/
 onnx/
 test/
 thirdparty/
+test_cpp/build
