@@ -39,5 +39,11 @@ include/mmdeploy
 inference_exe/
 onnx/
 test/
+results/
 thirdparty/
+<<<<<<< HEAD
 test_cpp/build
+=======
+test_cpp/build/
+
+>>>>>>> ef9016b3dcf9aa164fd1cf7af351663cc77d8e39
